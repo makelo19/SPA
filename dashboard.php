@@ -335,8 +335,6 @@ $mediaTMA = (count($allTmas) > 0) ? array_sum($allTmas) / count($allTmas) : 0;
         <a class="navbar-brand fw-bold" href="#"><i class="fas fa-chart-line me-2"></i>WIZ DASHBOARD</a>
         <div class="d-flex align-items-center">
             <span class="text-white small me-3"><i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($_SESSION['nome_completo']) ?></span>
-            <button onclick="window.location.reload()" class="btn btn-refresh btn-sm rounded-pill px-3 me-2 shadow-sm"><i class="fas fa-sync-alt me-1"></i> Atualizar</button>
-            <a href="index.php" class="btn btn-outline-light btn-sm rounded-pill px-3">Voltar</a>
         </div>
     </div>
 </nav>
@@ -440,7 +438,10 @@ $mediaTMA = (count($allTmas) > 0) ? array_sum($allTmas) / count($allTmas) : 0;
                     <label class="form-label small fw-bold mb-1">Data/Hora Fim</label>
                     <input type="datetime-local" name="f_dt_fim" class="form-control form-control-sm" value="<?= $f_dt_fim ?>">
                 </div>
-                <div class="col-md-2 d-grid"><button type="submit" class="btn btn-wiz btn-sm"><i class="fas fa-filter me-1"></i> Filtrar</button></div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-wiz btn-sm flex-fill"><i class="fas fa-filter me-1"></i> Filtrar</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-refresh btn-sm flex-fill"><i class="fas fa-sync-alt me-1"></i> Atualizar</button>
+                </div>
             </form>
         </div>
     </div>
@@ -469,32 +470,32 @@ $mediaTMA = (count($allTmas) > 0) ? array_sum($allTmas) / count($allTmas) : 0;
 
     <!-- CHARTS ROW 1 -->
     <div class="row g-4 mb-4">
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card card-wiz h-100">
                 <div class="card-header bg-white py-3 border-0"><h6 class="m-0 fw-bold text-navy">Ranking de Produção (Qtd)</h6></div>
-                <div class="card-body"><canvas id="chartProducao" height="250"></canvas></div>
+                <div class="card-body"><canvas id="chartProducao" height="100"></canvas></div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card card-wiz h-100">
                 <div class="card-header bg-white py-3 border-0"><h6 class="m-0 fw-bold text-navy">Volume Financeiro (R$)</h6></div>
-                <div class="card-body"><canvas id="chartValor" height="250"></canvas></div>
+                <div class="card-body"><canvas id="chartValor" height="100"></canvas></div>
             </div>
         </div>
     </div>
 
     <!-- CHARTS ROW 2 -->
     <div class="row g-4">
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card card-wiz h-100">
                 <div class="card-header bg-white py-3 border-0"><h6 class="m-0 fw-bold text-navy">Ranking TMA (Tempo Médio)</h6></div>
-                <div class="card-body"><canvas id="chartTMA" height="250"></canvas></div>
+                <div class="card-body"><canvas id="chartTMA" height="100"></canvas></div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card card-wiz h-100">
                 <div class="card-header bg-white py-3 border-0"><h6 class="m-0 fw-bold text-navy">Status Global</h6></div>
-                <div class="card-body"><canvas id="chartStatus" height="250"></canvas></div>
+                <div class="card-body"><canvas id="chartStatus" height="100"></canvas></div>
             </div>
         </div>
     </div>
@@ -579,6 +580,7 @@ $mediaTMA = (count($allTmas) > 0) ? array_sum($allTmas) / count($allTmas) : 0;
         },
         options: { 
             responsive: true, 
+            layout: { padding: { top: 30 } },
             plugins: { 
                 legend: { display: false },
                 datalabels: { anchor: 'end', align: 'top', font: { weight: 'bold' } }
@@ -589,23 +591,23 @@ $mediaTMA = (count($allTmas) > 0) ? array_sum($allTmas) / count($allTmas) : 0;
 
     // 4. Chart Status (Existing)
     new Chart(document.getElementById('chartStatus'), { 
-        type: 'doughnut', 
+        type: 'bar', 
         data: { 
             labels: <?= json_encode(array_keys($statusCount)) ?>, 
             datasets: [{ 
+                label: 'Status Global',
                 data: <?= json_encode(array_values($statusCount)) ?>, 
-                backgroundColor: ['#003366', '#FF8C00', '#28a745', '#dc3545', '#17a2b8', '#6610f2', '#6c757d'], 
-                borderWidth: 0 
+                backgroundColor: '#003366', 
+                borderRadius: 4
             }] 
         }, 
         options: { 
             responsive: true, 
-            maintainAspectRatio: false, 
-            layout: { padding: 20 },
             plugins: { 
-                legend: { position: 'right' },
-                datalabels: { anchor: 'end', align: 'end', offset: 4, font: { weight: 'bold' } }
-            } 
+                legend: { display: false },
+                datalabels: { anchor: 'end', align: 'top', font: { weight: 'bold' } }
+            },
+            scales: { y: { beginAtZero: true } } 
         } 
     });
 
